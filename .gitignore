@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+npm-debug.log
+.env # IMPORTANT: Do NOT commit your .env file with sensitive keys!
+
+# Docker
+.dockerignore
+!Dockerfile # Don't ignore Dockerfile itself
+!docker-compose.yml # Don't ignore docker-compose.yml itself
+.env # If you have a .env in the root, also ignore it here
+
+# For macOS
+.DS_Store
+
+# For Visual Studio Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Test files
+*.test.js
+*.spec.js

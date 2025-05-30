@@ -1,0 +1,47 @@
+# Archivo: user-management-service/docker-compose.yml
+
+version: '3.8' # Specify the Docker Compose file format version
+
+services:
+  # Define the user-service application container
+  user-service:
+    build:
+      context: ./user-service # Path to the build context (where the Dockerfile for user-service is)
+      dockerfile: Dockerfile  # Name of the Dockerfile to use
+    ports:
+      - "5000:5000" # Map host port 5000 to container port 5000
+    environment:
+      # These variables are passed into the user-service container.
+      # MONGODB_URI: Points to the 'mongo' service (your database container).
+      MONGODB_URI: mongodb://mongo:27017/user-service-db
+      # JWT_SECRET: IMPORTANT! Replace 'YOUR_ACTUAL_JWT_SECRET_HERE' with a secure, random string.
+      # This MUST be the same secret your Node.js application uses to sign and verify JWTs.
+      JWT_SECRET: YOUR_ACTUAL_JWT_SECRET_HERE
+      # PORT: The port your Node.js app listens on inside the container.
+      PORT: 5000
+    depends_on:
+      - mongo # Ensures the 'mongo' service starts before 'user-service'
+    volumes:
+      - ./user-service:/app         # Mount local code for development (changes sync to container)
+      - /app/node_modules           # Exclude node_modules from host mount to use container's installs
+    restart: always # Always restart the container if it stops unexpectedly
+
+  # Define the MongoDB database container
+  mongo:
+    image: mongo:4.4 # Use an official MongoDB image (version 4.4 is specified)
+    ports:
+      - "27017:27017" # Map host port 27017 to container port 27017 (MongoDB default)
+    # environment:
+      # OPTIONAL: Uncomment these if you want to set root username/password for MongoDB inside Docker.
+      # If uncommented, you must update the MONGODB_URI in user-service's environment to include credentials:
+      # e.g., MONGODB_URI: mongodb://root:mypassword@mongo:27017/user-service-db
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: your_mongo_root_password_for_docker_compose
+    volumes:
+      # 'mongo-data' here refers to the named volume defined at the bottom of this file.
+      - mongo-data:/data/db # Persist MongoDB data to a named volume.
+
+# Define named volumes used by services.
+# This section ensures data persistence for your MongoDB database.
+volumes:
+  mongo-data: # Declare the named volume 'mongo-data'. No value needed after the colon here.
