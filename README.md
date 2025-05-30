@@ -25,7 +25,7 @@ Follow these steps to set up and run the User Management Service using Docker Co
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/Kxtss/CodeCraftHub.git](https://github.com/Kxtss/CodeCraftHub.git)
+    git clone https://github.com/Kxtss/CodeCraftHub.git
     cd CodeCraftHub/user-management-service
     ```
 
